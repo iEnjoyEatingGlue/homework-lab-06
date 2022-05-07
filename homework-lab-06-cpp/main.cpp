@@ -15,21 +15,35 @@ public:
         }
         setTexture(texture_);
         setTextureRect(sf::IntRect(60, 0, 30, 37));
-        setPosition(0,550);
+        setPosition(0,500);
     }
 
-    void fall(const sf::Time &elapsed)
+    void fall(float dt, bool x)
     {
-        float dt = elapsed.asSeconds();
-        t_ = t_ + dt;
-        float d = (9.81/2.0)*pow(t_,1.5);
-        move(0,d);
+        d_ = d_ + dt;
+        float d = (1.3)*pow(d_,1.5);
+        if(x == true)
+        {
+            move(0, -y_init*dt + m_speed_y*d*dt);
+        }
+        if(x == false)
+        {
+            y_init = (-m_speed_y*dt + m_speed_y*d*dt)*-1.0;
+            move(0,1);
+        }
+
     }
 
-    void setSpeed(const int& x_speed, const int& y_speed)
+//    void y_direction(float dt)
+//    {
+//        m_speed_y = -y_init*dt + y_init*dt*d
+//    }
+
+    void setSpeed(const float& x_speed, const float& y_speed)
     {
         m_speed_x = x_speed;
         m_speed_y = y_speed;
+        y_init = y_speed;
     }
 
     void animate(const sf::Time &elapsed)
@@ -47,7 +61,6 @@ public:
             }
         }
         setTextureRect(running_frames[fragments_index]);
-        move(m_speed_x*dt,m_speed_y*dt);
     }
 
     void setBounds(const float& l_bound, const float& r_bound,const float& u_bound,const float& d_bound){
@@ -71,24 +84,23 @@ public:
         auto hero_left = hero.left;
         auto hero_right = hero.left+ hero.width;
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && v[1] == false)
         {
             if(hero_top - 1 >= u_bound_)
             {
-                if(v[0] == true)
-                {
-                    move(0,m_speed_y*time * -1.0);
-                }
+                y_init = m_speed_y;
+                d_ = 0;
+                move(0,-1);
             }
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        if(v[1] == true)
         {
             if(hero_bottom + 1 <= d_bound_)
             {
-                if(v[1] == true)
-                {
-                     move(0,m_speed_y*time);
-                }
+
+//                d_ = d_ + time;
+//                float d = 1.3*pow(d_,1.5);
+                fall(time, v[0]);
             }
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -97,7 +109,7 @@ public:
             {
                 if(v[2] == true)
                 {
-                     move(m_speed_x*time * -1.0,0);
+                     move(m_speed_x*time * -1.0,0.0);
                 }
             }
         }
@@ -107,7 +119,7 @@ public:
             {
                 if(v[3] == true)
                 {
-                     move(m_speed_x*time,0);
+                     move(m_speed_x*time,0.0);
                 }
             }
         }
@@ -115,14 +127,17 @@ public:
 private:
     sf::Texture texture_;
     int fps_;
-    int m_speed_x = 0 ;
-    int m_speed_y = 0 ;
+    float m_speed_x = 0 ;
+    float m_speed_y = 0 ;
+    float y_init= 0 ;
+    float direction = 1.0;
 
     float l_bound_ = 0;
     float r_bound_ = 0;
     float u_bound_ = 0;
     float d_bound_ = 0;
     float t_ = 0.0;
+    float d_ = 0.0;
     unsigned int fragments_index = 0;
     std::vector<sf::IntRect> running_frames;
 };
@@ -189,7 +204,7 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
         float wall_bottom = wall.top + wall.height;
         float wall_right = wall.left + wall.width;
 
-        if(hero_top <= wall_bottom && hero_bottom >= wall_top && hero_left - 1<= wall_right && hero_right + 1 >= wall_right)
+        if(hero_top - 1 <= wall_bottom && hero_bottom >= wall_top + 1 && hero_left - 1<= wall_right && hero_right + 1 >= wall_right)
         {
             v[2] = 0;
             break;
@@ -202,7 +217,7 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
         float wall_bottom = wall.top + wall.height;
         float wall_left = wall.left;
 
-        if(hero_top <= wall_bottom && hero_bottom >= wall_top && hero_left - 1 <= wall_left && hero_right + 1 >= wall_left)
+        if(hero_top - 1 <= wall_bottom && hero_bottom >= wall_top + 1 && hero_left - 1 <= wall_left && hero_right + 1 >= wall_left)
         {
             v[3] = 0;
             break;
@@ -225,25 +240,27 @@ int main()
     CustomWall wall_2(&texture_wall, 300, 350, 250, 50);
     CustomWall wall_3(&texture_wall, 50, 200, 200, 50);
     CustomWall wall_4(&texture_wall, 450, 120, 250, 50);
+    CustomWall wall_5(&texture_wall, 0, 597, 8000, 3);
 
     walls.emplace_back(wall_1);
     walls.emplace_back(wall_2);
     walls.emplace_back(wall_3);
     walls.emplace_back(wall_4);
+    walls.emplace_back(wall_5);
 
     AnimatedSprite hero(10, "Character\\character.png");
     hero.setBounds(0, window.getSize().x, 0, window.getSize().y);
-    hero.setSpeed(200,200);
+    hero.setSpeed(100,500);
 
     //hero.add_animation_frame(sf::IntRect(0, 0, 50, 37)); // hero standing frame 1
     //hero.add_animation_frame(sf::IntRect(50, 0, 50, 37)); // hero standing frame 2
     //hero.add_animation_frame(sf::IntRect(100, 0, 50, 37)); // hero standing frame 3
-//    hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
-//    hero.add_animation_frame(sf::IntRect(210, 0, 30, 37)); // hero running frame 1
-//    hero.add_animation_frame(sf::IntRect(260, 0, 30, 37)); // hero running frame 1
-//    hero.add_animation_frame(sf::IntRect(310, 0, 30, 37)); // hero running frame 1
-//    hero.add_animation_frame(sf::IntRect(360, 0, 30, 37)); // hero running frame 1
-//    hero.add_animation_frame(sf::IntRect(410, 0, 30, 37)); // hero running frame 1
+    hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+    hero.add_animation_frame(sf::IntRect(210, 0, 30, 37)); // hero running frame 1
+    hero.add_animation_frame(sf::IntRect(260, 0, 30, 37)); // hero running frame 1
+    hero.add_animation_frame(sf::IntRect(310, 0, 30, 37)); // hero running frame 1
+    hero.add_animation_frame(sf::IntRect(360, 0, 30, 37)); // hero running frame 1
+    hero.add_animation_frame(sf::IntRect(410, 0, 30, 37)); // hero running frame 1
 
     sf::Clock clock;
 
@@ -274,6 +291,7 @@ int main()
         sprite.setTexture(texture);
         sprite.setTextureRect(sf::IntRect(0, 0, 800, 600));
 
+        hero.animate(elapsed);
         hero.moveInDirection(elapsed,Colisions(hero,walls));
 
         // draw everything here...
