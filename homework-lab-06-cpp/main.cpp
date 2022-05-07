@@ -20,6 +20,7 @@ public:
 
     void fall(float dt, bool x)
     {
+        sf::FloatRect hero_ = getGlobalBounds();
         d_ = d_ + dt;
         float d = (250)*pow(d_,1.3);
         m_speed_y = -1.0 * y_init*dt + d*dt;
@@ -27,23 +28,12 @@ public:
         {
             move(0,m_speed_y);
         }
-        if(x == false)
+        if(x == false || hero_.top <= 0)
         {
             move(0,3);
-            std::cout << y_init << std::endl;
             y_init = (-1.0* y_init + d);
-//            std::cout << dt << std::endl;
-//            std::cout << d << std::endl;
-            std::cout << y_init << std::endl;
-
         }
-
     }
-
-//    void y_direction(float dt)
-//    {
-//        m_speed_y = -y_init*dt + y_init*dt*d
-//    }
 
     void setSpeed(const float& x_speed, const float& y_speed)
     {
@@ -69,15 +59,20 @@ public:
         setTextureRect(running_frames[fragments_index]);
     }
 
-    void setBounds(const float& l_bound, const float& r_bound,const float& u_bound,const float& d_bound){
+    void setBounds(const float& l_bound, const float& r_bound,const float& u_bound,const float& d_bound)
+    {
         l_bound_  = l_bound  ;
         r_bound_  = r_bound  ;
         u_bound_  = u_bound  ;
         d_bound_  = d_bound  ;
     }
 
-    void add_animation_frame(const sf::IntRect& frame){
-        //add animation frames to vecto
+    void add_animation_frame(const sf::IntRect& frame)
+    {
+        if(running_frames.size() >= 6)
+        {
+            running_frames.erase(running_frames.begin(),running_frames.end());
+        }
         running_frames.emplace_back(frame);
     }
 
@@ -103,9 +98,6 @@ public:
         {
             if(hero_bottom + 1 <= d_bound_)
             {
-
-//                d_ = d_ + time;
-//                float d = 1.3*pow(d_,1.5);
                 fall(time, v[0]);
             }
         }
@@ -136,7 +128,6 @@ private:
     float m_speed_x = 0 ;
     float m_speed_y = 0 ;
     float y_init= 0 ;
-    float direction = 1.0;
 
     float l_bound_ = 0;
     float r_bound_ = 0;
@@ -235,10 +226,11 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
 
 int main()
 {
+    bool a = true;
     sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 
     sf::Texture texture_wall;
-    if(!texture_wall.loadFromFile("wall.png")) { return 1; }
+    if(!texture_wall.loadFromFile("wall.png")) { return 1; };
 
     std::vector<CustomWall> walls;
 
@@ -258,9 +250,9 @@ int main()
     hero.setBounds(0, window.getSize().x, 0, window.getSize().y);
     hero.setSpeed(100,350);
 
-    //hero.add_animation_frame(sf::IntRect(0, 0, 50, 37)); // hero standing frame 1
-    //hero.add_animation_frame(sf::IntRect(50, 0, 50, 37)); // hero standing frame 2
-    //hero.add_animation_frame(sf::IntRect(100, 0, 50, 37)); // hero standing frame 3
+    sf::Clock clock;
+
+    hero.setScale(1.5,1.5);
     hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
     hero.add_animation_frame(sf::IntRect(210, 0, 30, 37)); // hero running frame 1
     hero.add_animation_frame(sf::IntRect(260, 0, 30, 37)); // hero running frame 1
@@ -268,13 +260,10 @@ int main()
     hero.add_animation_frame(sf::IntRect(360, 0, 30, 37)); // hero running frame 1
     hero.add_animation_frame(sf::IntRect(410, 0, 30, 37)); // hero running frame 1
 
-    sf::Clock clock;
 
     // run the program as long as the window is open
     while (window.isOpen()) {
 //    hero.setTextureRect(sf::IntRect(50, 0, 50, 37));
-    hero.setScale(1.5,1.5);
-
         sf::Time elapsed = clock.restart();
 
         sf::Event event;
@@ -283,6 +272,48 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        if(a == true)
+        {
+             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+        }
+
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            a = false;
+            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(210, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(260, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(310, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(360, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(410, 0, 30, 37)); // hero running frame 1
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            a = true;
+            hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(240, 0, -30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(290, 0, -30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(340, 0, -30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(390, 0, -30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(440, 0, -30, 37)); // hero running frame 1
+        }
+        else if(a == false)
+        {
+            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+        }
+
+
 
         window.clear(sf::Color::Black);
 
@@ -300,15 +331,11 @@ int main()
         hero.animate(elapsed);
         hero.moveInDirection(elapsed,Colisions(hero,walls));
 
-        // draw everything here...
         window.draw(sprite);
         window.draw(hero);
         for(auto &wall: walls)
             window.draw(wall);
 
-
-
-        // end the current frame
         window.display();
     }
 
