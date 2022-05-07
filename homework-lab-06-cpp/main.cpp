@@ -14,7 +14,7 @@ public:
             std::cerr << "Could not load texture" << std::endl;
         }
         setTexture(texture_);
-        setTextureRect(sf::IntRect(50, 0, 50, 37));
+        setTextureRect(sf::IntRect(60, 0, 30, 37));
         setPosition(0,550);
     }
 
@@ -101,7 +101,6 @@ public:
                 }
             }
         }
-
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
             if(hero_right + 1 <= r_bound_)
@@ -152,19 +151,19 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
     std::vector<bool> v(4, 1);
 
     sf::FloatRect hero_ = hero.getGlobalBounds();
-    auto hero_top = hero_.top;
-    auto hero_bottom = hero_.top + hero_.height;
-    auto hero_left = hero_.left;
-    auto hero_right = hero_.left+ hero_.width;
+    float hero_top = hero_.top;
+    float hero_bottom = hero_.top + hero_.height;
+    float hero_left = hero_.left;
+    float hero_right = hero_.left + hero_.width;
 
     for(auto &wall_: walls)
     {
         sf::FloatRect wall = wall_.getGlobalBounds();
-        auto wall_bottom = wall.top + wall.height;
-        auto wall_left = wall.left - hero_.width;
-        auto wall_right = wall.left + wall.width + hero_.width;
+        float wall_bottom = wall.top + wall.height;
+        float wall_left = wall.left - hero_.width;
+        float wall_right = wall.left + wall.width + hero_.width;
 
-        if(hero_top - 1 <= wall_bottom && hero_bottom + 1 >= wall_bottom && hero_left >= wall_left && hero_right <= wall_right)
+        if(hero_top - 1 <= wall_bottom && hero_bottom + 1 >= wall_bottom && hero_left >= wall_left && hero_right  <= wall_right)
         {
             v[0] = 0;
             break;
@@ -173,11 +172,11 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
     for(auto &wall_: walls)
     {
         sf::FloatRect wall = wall_.getGlobalBounds();
-        auto wall_top = wall.top;
-        auto wall_left = wall.left - hero_.width;
-        auto wall_right = wall.left + wall.width + hero_.width;
+        float wall_top = wall.top;
+        float wall_left = wall.left - hero_.width;
+        float wall_right = wall.left + wall.width + hero_.width;
 
-        if(hero_top - 1 <= wall_top && hero_bottom + 1 >= wall_top && hero_left >= wall_left && hero_right <= wall_right)
+        if(hero_top - 1 <= wall_top && hero_bottom + 1 >= wall_top && hero_left >= wall_left && hero_right <= wall_right )
         {
             v[1] = 0;
             break;
@@ -186,11 +185,11 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
     for(auto &wall_: walls)
     {
         sf::FloatRect wall = wall_.getGlobalBounds();
-        auto wall_top = wall.top;
-        auto wall_bottom = wall.top + wall.height;
-        auto wall_right = wall.left + wall.width;
+        float wall_top = wall.top;
+        float wall_bottom = wall.top + wall.height;
+        float wall_right = wall.left + wall.width;
 
-        if(hero_top <= wall_bottom && hero_bottom >= wall_top && hero_left - 1 <= wall_right && hero_right + 1 >= wall_right)
+        if(hero_top <= wall_bottom && hero_bottom >= wall_top && hero_left - 1<= wall_right && hero_right + 1 >= wall_right)
         {
             v[2] = 0;
             break;
@@ -199,9 +198,9 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
     for(auto &wall_: walls)
     {
         sf::FloatRect wall = wall_.getGlobalBounds();
-        auto wall_top = wall.top;
-        auto wall_bottom = wall.top + wall.height;
-        auto wall_left = wall.left;
+        float wall_top = wall.top;
+        float wall_bottom = wall.top + wall.height;
+        float wall_left = wall.left;
 
         if(hero_top <= wall_bottom && hero_bottom >= wall_top && hero_left - 1 <= wall_left && hero_right + 1 >= wall_left)
         {
@@ -239,18 +238,18 @@ int main()
     //hero.add_animation_frame(sf::IntRect(0, 0, 50, 37)); // hero standing frame 1
     //hero.add_animation_frame(sf::IntRect(50, 0, 50, 37)); // hero standing frame 2
     //hero.add_animation_frame(sf::IntRect(100, 0, 50, 37)); // hero standing frame 3
-    hero.add_animation_frame(sf::IntRect(150, 0, 50, 37)); // hero running frame 1
-    hero.add_animation_frame(sf::IntRect(200, 0, 50, 37)); // hero running frame 1
-    hero.add_animation_frame(sf::IntRect(250, 0, 50, 37)); // hero running frame 1
-    hero.add_animation_frame(sf::IntRect(300, 0, 50, 37)); // hero running frame 1
-    hero.add_animation_frame(sf::IntRect(350, 0, 50, 37)); // hero running frame 1
-    hero.add_animation_frame(sf::IntRect(400, 0, 50, 37)); // hero running frame 1
+//    hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+//    hero.add_animation_frame(sf::IntRect(210, 0, 30, 37)); // hero running frame 1
+//    hero.add_animation_frame(sf::IntRect(260, 0, 30, 37)); // hero running frame 1
+//    hero.add_animation_frame(sf::IntRect(310, 0, 30, 37)); // hero running frame 1
+//    hero.add_animation_frame(sf::IntRect(360, 0, 30, 37)); // hero running frame 1
+//    hero.add_animation_frame(sf::IntRect(410, 0, 30, 37)); // hero running frame 1
 
     sf::Clock clock;
 
     // run the program as long as the window is open
     while (window.isOpen()) {
-    hero.setTextureRect(sf::IntRect(50, 0, 50, 37));
+//    hero.setTextureRect(sf::IntRect(50, 0, 50, 37));
     hero.setScale(1.5,1.5);
 
         sf::Time elapsed = clock.restart();
