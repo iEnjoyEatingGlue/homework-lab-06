@@ -21,15 +21,21 @@ public:
     void fall(float dt, bool x)
     {
         d_ = d_ + dt;
-        float d = (1.3)*pow(d_,1.5);
+        float d = (250)*pow(d_,1.3);
+        m_speed_y = -1.0 * y_init*dt + d*dt;
         if(x == true)
         {
-            move(0, -y_init*dt + m_speed_y*d*dt);
+            move(0,m_speed_y);
         }
         if(x == false)
         {
-            y_init = (-m_speed_y*dt + m_speed_y*d*dt)*-1.0;
-            move(0,1);
+            move(0,3);
+            std::cout << y_init << std::endl;
+            y_init = (-1.0* y_init + d);
+//            std::cout << dt << std::endl;
+//            std::cout << d << std::endl;
+            std::cout << y_init << std::endl;
+
         }
 
     }
@@ -88,7 +94,7 @@ public:
         {
             if(hero_top - 1 >= u_bound_)
             {
-                y_init = m_speed_y;
+                setSpeed(100,350);
                 d_ = 0;
                 move(0,-1);
             }
@@ -250,7 +256,7 @@ int main()
 
     AnimatedSprite hero(10, "Character\\character.png");
     hero.setBounds(0, window.getSize().x, 0, window.getSize().y);
-    hero.setSpeed(100,500);
+    hero.setSpeed(100,350);
 
     //hero.add_animation_frame(sf::IntRect(0, 0, 50, 37)); // hero standing frame 1
     //hero.add_animation_frame(sf::IntRect(50, 0, 50, 37)); // hero standing frame 2
