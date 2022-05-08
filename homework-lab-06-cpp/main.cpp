@@ -223,7 +223,6 @@ std::vector<bool> Colisions(const AnimatedSprite &hero,std::vector<CustomWall> &
     return(v);
 }
 
-
 int main()
 {
     bool a = true;
@@ -260,15 +259,13 @@ int main()
     hero.add_animation_frame(sf::IntRect(360, 0, 30, 37)); // hero running frame 1
     hero.add_animation_frame(sf::IntRect(410, 0, 30, 37)); // hero running frame 1
 
-
-    // run the program as long as the window is open
-    while (window.isOpen()) {
-//    hero.setTextureRect(sf::IntRect(50, 0, 50, 37));
+    while (window.isOpen())
+    {
         sf::Time elapsed = clock.restart();
 
         sf::Event event;
-        while (window.pollEvent(event)) {
-            // "close requested" event: we close the window
+        while (window.pollEvent(event))
+        {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
@@ -281,8 +278,6 @@ int main()
              hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
              hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
         }
-
-
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
             a = false;
@@ -313,8 +308,6 @@ int main()
             hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
         }
 
-
-
         window.clear(sf::Color::Black);
 
         sf::Texture texture;
@@ -338,6 +331,5 @@ int main()
 
         window.display();
     }
-
     return 0;
 }
