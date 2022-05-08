@@ -15,23 +15,25 @@ public:
         }
         setTexture(texture_);
         setTextureRect(sf::IntRect(60, 0, 30, 37));
-        setPosition(0,500);
+        setPosition(0,541);
     }
 
     void fall(float dt, bool x)
     {
         sf::FloatRect hero_ = getGlobalBounds();
         d_ = d_ + dt;
-        float d = (250)*pow(d_,1.3);
-        m_speed_y = -1.0 * y_init*dt + d*dt;
+        float d = (1.5)*pow(d_,1.5);
+        y_init_2 = fabs(y_init);
+        m_speed_y = -1.0 * y_init*dt + y_init_2*d/200.0;
         if(x == true)
         {
+            std::cout << m_speed_y << std::endl;
             move(0,m_speed_y);
         }
         if(x == false || hero_.top <= 0)
         {
             move(0,3);
-            y_init = (-1.0* y_init + d);
+            y_init = (-1.0* y_init +  y_init_2*d);
         }
     }
 
@@ -40,6 +42,7 @@ public:
         m_speed_x = x_speed;
         m_speed_y = y_speed;
         y_init = y_speed;
+        y_init_2 = y_speed;
     }
 
     void animate(const sf::Time &elapsed)
@@ -90,7 +93,7 @@ public:
             if(hero_top - 1 >= u_bound_)
             {
                 setSpeed(100,350);
-                d_ = 0;
+                d_ = 0.0;
                 move(0,-1);
             }
         }
@@ -128,6 +131,7 @@ private:
     float m_speed_x = 0 ;
     float m_speed_y = 0 ;
     float y_init= 0 ;
+    float y_init_2= 0 ;
 
     float l_bound_ = 0;
     float r_bound_ = 0;
@@ -271,12 +275,12 @@ int main()
         }
         if(a == true)
         {
-             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
-             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
-             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
-             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
-             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
-             hero.add_animation_frame(sf::IntRect(190, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(40, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(40, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(40, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(40, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(40, 0, -30, 37)); // hero running frame 1
+             hero.add_animation_frame(sf::IntRect(40, 0, -30, 37)); // hero running frame 1
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
@@ -300,12 +304,12 @@ int main()
         }
         else if(a == false)
         {
-            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
-            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
-            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
-            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
-            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
-            hero.add_animation_frame(sf::IntRect(160, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(10, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(10, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(10, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(10, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(10, 0, 30, 37)); // hero running frame 1
+            hero.add_animation_frame(sf::IntRect(10, 0, 30, 37)); // hero running frame 1
         }
 
         window.clear(sf::Color::Black);
